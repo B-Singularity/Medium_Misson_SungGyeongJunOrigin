@@ -1,0 +1,46 @@
+<!-- HTML -->
+<div class="container my-3">
+    <div id="error" class="alert alert-danger" style="display: none;">
+        사용자ID 또는 비밀번호를 확인해 주세요.
+    </div>
+    <div class="mb-3">
+        <label for="username" class="form-label">사용자ID</label>
+        <input type="text" id="username" class="form-control">
+    </div>
+    <div class="mb-3">
+        <label for="password" class="form-label">비밀번호</label>
+        <input type="password" id="password" class="form-control">
+    </div>
+    <button onclick="login()" class="btn btn-primary">로그인</button>
+</div>
+
+<script>
+    function login() {
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+
+        const data = {
+            username: username,
+            password: password
+        };
+
+        fetch('/member/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+            .then(response => {
+                if (response.ok) {
+                    window.location.href = '/dashboard';
+                } else {
+                    // 로그인 실패 시 처리
+                    document.getElementById('error').style.display = 'block';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+</script>

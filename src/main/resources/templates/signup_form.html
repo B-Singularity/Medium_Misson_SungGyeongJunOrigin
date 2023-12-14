@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>회원가입 폼</title>
+</head>
+<body>
+<div class="container my-3">
+    <div class="my-3 border-bottom">
+        <div>
+            <h4>회원가입</h4>
+        </div>
+    </div>
+    <form id="signupForm">
+        <div class="mb-3">
+            <label for="membername" class="form-label">사용자ID</label>
+            <input type="text" id="membername" name="membername" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label for="password" class="form-label">비밀번호</label>
+            <input type="password" id="password" name="password" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label for="passwordConfirm" class="form-label">비밀번호 확인</label>
+            <input type="password" id="passwordConfirm" name="passwordConfirm" class="form-control">
+            <div id="passwordError" style="color: red;"></div>
+        </div>
+        <div class="mb-3">
+            <label for="email" class="form-label">이메일</label>
+            <input type="email" id="email" name="email" class="form-control">
+        </div>
+        <button type="button" onclick="submitForm()" class="btn btn-primary">회원가입</button>
+    </form>
+</div>
+
+<script>
+    function submitForm() {
+        const membername = document.getElementById("membername").value;
+        const password = document.getElementById("password").value;
+        const passwordConfirm = document.getElementById("passwordConfirm").value;
+        const email = document.getElementById("email").value;
+
+        if (password !== passwordConfirm) {
+            document.getElementById("passwordError").innerText = "비밀번호가 일치하지 않습니다.";
+            return;
+        }
+
+        document.getElementById("passwordError").innerText = "";
+
+        const data = {
+            "membername": membername,
+            "password": password,
+            "passwordConfirm": passwordConfirm,
+            "email": email
+        };
+
+        fetch("/member/signup", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.text();
+            })
+            .then(data => {
+                alert(data);
+                window.location.href = '/';
+            })
+            .catch(error => {
+                console.error('There was an error!', error);
+                alert('회원가입에 실패했습니다.');
+            });
+    }
+</script>
+</body>
+</html>
+
+
+
